@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>성장의 그늘 · 모둠 탐구 활동지</title>
+<style>
+:root{
+  --bg:#f6f4ef; --panel:#fff; --ink:#1f2328; --muted:#6b7280; --line:#e2ddd3;
+  --accent:#c2410c; --accent-soft:#fff2e8; --green:#15803d; --green-soft:#eaf6ee;
+  --blue:#1d4ed8; --blue-soft:#eef2ff; --lock:#f3f1ec;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 10px 28px rgba(0,0,0,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14161a; --panel:#1c1f24; --ink:#e8e6e1; --muted:#9aa0a6; --line:#31363d;
+  --accent:#fb923c; --accent-soft:#2a1d15; --green:#4ade80; --green-soft:#16241b;
+  --blue:#93b4ff; --blue-soft:#171d2e; --lock:#22262c;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px rgba(0,0,0,.35);}}
+:root[data-theme="dark"]{
+  --bg:#14161a; --panel:#1c1f24; --ink:#e8e6e1; --muted:#9aa0a6; --line:#31363d;
+  --accent:#fb923c; --accent-soft:#2a1d15; --green:#4ade80; --green-soft:#16241b;
+  --blue:#93b4ff; --blue-soft:#171d2e; --lock:#22262c;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.65;
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",system-ui,sans-serif}
+.wrap{max-width:920px;margin:0 auto;padding:18px 16px 130px}
+
+/* 헤더 */
+header.top{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+.eyebrow{font-size:12.5px;letter-spacing:.06em;color:var(--accent);font-weight:700}
+h1{font-size:21px;margin:5px 0 3px;line-height:1.3}
+.sub{color:var(--muted);font-size:13.5px;margin:0}
+.meta{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:14px}
+.meta label{display:block;font-size:12px;color:var(--muted);margin-bottom:3px}
+@media(max-width:640px){.meta{grid-template-columns:repeat(2,1fr)}}
+input[type=text],textarea,select{width:100%;background:transparent;color:inherit;font:inherit;
+  border:1px solid var(--line);border-radius:8px;padding:8px 10px;outline:none;resize:vertical}
+input:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+textarea{min-height:66px}
+
+/* 진행 레일 */
+.rail{display:flex;gap:6px;margin:16px 0 4px;overflow-x:auto;padding-bottom:4px}
+.rail button{flex:0 0 auto;font:inherit;font-size:12.5px;border:1px solid var(--line);background:var(--panel);
+  color:var(--muted);border-radius:999px;padding:6px 13px;cursor:pointer;white-space:nowrap}
+.rail button.cur{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.rail button.done{color:var(--green);border-color:var(--green);background:var(--green-soft)}
+.rail button:disabled{opacity:.45;cursor:not-allowed}
+.progress{height:5px;background:var(--lock);border-radius:9px;overflow:hidden;margin-bottom:14px}
+.progress i{display:block;height:100%;background:var(--accent);width:0;transition:width .3s}
+
+/* 단계 화면 */
+.screen{display:none;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:20px 22px;box-shadow:var(--shadow);animation:fade .25s ease}
+.screen.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.stephead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:2px solid var(--ink);padding-bottom:9px;margin-bottom:14px}
+.stepno{font-weight:800;font-size:18px}
+.time{margin-left:auto;font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px}
+.guide{font-size:13.5px;color:var(--muted);margin:0 0 14px}
+.carry{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:10px 14px;margin:0 0 14px;font-size:13.5px}
+.carry b{color:var(--accent)}
+.val{display:inline-block;background:var(--panel);border:1px dashed var(--accent);border-radius:6px;padding:1px 8px;margin:2px;font-weight:600}
+.val.empty{color:var(--muted);border-color:var(--line);font-weight:400}
+
+/* 주제 탭 */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{flex:1 1 150px;font:inherit;text-align:left;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink);border-radius:11px;padding:11px 13px;cursor:pointer;line-height:1.4}
+.tabs button .t{font-weight:700;font-size:15px;display:block}
+.tabs button .s{font-size:11.5px;color:var(--muted)}
+.tabs button.cur{border-color:var(--accent);background:var(--accent-soft)}
+.tabs button.chosen{border-color:var(--green);background:var(--green-soft)}
+.tabs button.chosen .s{color:var(--green)}
+.tpanel{border:1px solid var(--line);border-radius:12px;padding:16px}
+.tpanel h3{margin:0 0 4px;font-size:17px}
+.look{font-size:13.5px;color:var(--muted);margin:0 0 10px}
+.marks{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13.5px;margin-bottom:6px}
+.marks label{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:999px;padding:3px 11px;cursor:pointer}
+.marks input{accent-color:var(--accent)}
+.qpre{background:var(--lock);border-radius:9px;padding:10px 12px;font-size:12.5px;color:var(--muted);margin:10px 0}
+.qpre li{margin:3px 0}
+
+.card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+.card h3{margin:0 0 4px;font-size:16px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:8px 0}
+th,td{border:1px solid var(--line);padding:8px 10px;vertical-align:top;font-size:14px;text-align:left}
+th{background:var(--lock);font-weight:700;font-size:13px}
+td.k{background:var(--lock);font-weight:600;width:135px}
+.badge{display:inline-block;font-size:11.5px;border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--muted)}
+
+/* 사진 */
+.photo{border:1px dashed var(--line);border-radius:10px;padding:11px;margin:10px 0;background:var(--lock)}
+.photo .plabel{font-size:12.5px;font-weight:700;color:var(--accent);margin-bottom:7px}
+.photo .row{display:flex;gap:11px;align-items:flex-start}
+@media(max-width:600px){.photo .row{flex-direction:column}}
+.drop{flex:0 0 180px;width:180px;min-height:118px;border:1px solid var(--line);border-radius:8px;background:var(--panel);
+  display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:12.5px;cursor:pointer;overflow:hidden;padding:8px}
+.drop img{width:100%;display:block;border-radius:4px}
+.photo .side{flex:1;min-width:0}
+.photo textarea{min-height:92px;background:var(--panel)}
+.btn-x{margin-top:5px;font-size:12px;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:underline;padding:0}
+
+.qpick{display:block;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0;cursor:pointer;font-size:14px}
+.qpick.sel{border-color:var(--accent);background:var(--accent-soft)}
+.qpick input{margin-right:8px;accent-color:var(--accent)}
+.checkrow{display:flex;gap:14px;align-items:center;font-size:13.5px}
+.note{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+.warn{background:var(--accent-soft);border:1px dashed var(--accent);color:var(--accent);
+  border-radius:9px;padding:9px 12px;font-size:13px;margin-top:12px;display:none}
+.warn.on{display:block}
+
+/* 하단 바 */
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--panel);border-top:1px solid var(--line);
+  padding:9px 16px;display:flex;gap:9px;align-items:center;justify-content:center;flex-wrap:wrap;z-index:60}
+button.act{font:inherit;font-weight:700;font-size:14px;border-radius:9px;padding:9px 16px;cursor:pointer;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink)}
+button.act.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button.act:disabled{opacity:.4;cursor:not-allowed}
+.saveinfo{font-size:12px;color:var(--muted);width:100%;text-align:center}
+
+/* ===== A4 종합 정리 ===== */
+.sheetbox{background:var(--lock);border:1px solid var(--line);border-radius:12px;padding:14px;overflow:auto}
+#sheet{width:210mm;min-height:297mm;background:#fff;color:#111;margin:0 auto;padding:11mm 11mm 9mm;
+  box-shadow:0 2px 16px rgba(0,0,0,.18);transform-origin:top left}
+#sheet *{border-color:#c9c9c9!important;color:#111}
+#sheet .s-head{display:flex;align-items:flex-end;gap:8px;border-bottom:2.4px solid #111;padding-bottom:5px}
+#sheet .s-head .k{font-size:8.4pt;color:#555!important}
+#sheet h2{font-size:14.5pt;margin:0;line-height:1.2}
+#sheet .s-meta{margin-left:auto;font-size:8.4pt;text-align:right;color:#333!important;line-height:1.45}
+#sheet .q{border:1.4px solid #111;border-radius:3px;padding:5px 9px;margin:7px 0;font-size:10.6pt;font-weight:700;line-height:1.35}
+#sheet .q span{font-size:8pt;font-weight:700;color:#b8460e!important;margin-right:6px}
+#sheet .cols{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#sheet h4{font-size:8.6pt;margin:7px 0 3px;padding-bottom:2px;border-bottom:1px solid #111;letter-spacing:.02em}
+#sheet table{width:100%;border-collapse:collapse;margin:0}
+#sheet th,#sheet td{border:.7px solid #bbb;padding:2.6px 4px;font-size:7.9pt;line-height:1.32;vertical-align:top}
+#sheet th{background:#f0efeb!important;font-weight:700;text-align:left}
+#sheet td.k{background:#f7f6f3!important;font-weight:700;width:46px;white-space:nowrap}
+#sheet .pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:3px}
+#sheet .pg{border:.7px solid #bbb;border-radius:3px;overflow:hidden;background:#fafafa}
+#sheet .pg img{width:100%;height:27mm;object-fit:cover;display:block}
+#sheet .pg .cap{font-size:6.9pt;padding:2.5px 4px;line-height:1.3;color:#333!important}
+#sheet .pact{border:1px solid #111;border-radius:3px;padding:5px 8px;font-size:8.8pt;margin-top:7px;line-height:1.5}
+#sheet .sign{display:flex;gap:10px;font-size:7.6pt;color:#555!important;margin-top:6px;justify-content:flex-end}
+#sheet .empty{color:#999!important;font-weight:400}
+.picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin:10px 0}
+.picker label{border:1px solid var(--line);border-radius:9px;overflow:hidden;cursor:pointer;background:var(--panel);display:block}
+.picker label.on{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft)}
+.picker img{width:100%;height:66px;object-fit:cover;display:block}
+.picker .c{font-size:11.5px;padding:5px 7px;color:var(--muted);display:flex;gap:5px;align-items:flex-start}
+
+/* 커뮤니티 맵 */
+.mapdrop{border:1px dashed var(--line);border-radius:11px;background:var(--lock);padding:26px 14px;
+  text-align:center;color:var(--muted);font-size:13.5px;cursor:pointer;line-height:1.6}
+.mapdrop span{font-size:12px}
+.mapstage{position:relative;border:1px solid var(--line);border-radius:11px;overflow:hidden;background:var(--lock);cursor:crosshair}
+.mapstage img{width:100%;display:block}
+#pinlayer{position:absolute;inset:0}
+.pin{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;
+  pointer-events:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+.pin .dot{width:23px;height:23px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+  border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.pin .dot b{transform:rotate(45deg);color:#fff;font-size:11.5px;line-height:1}
+.pin .lb{margin-top:3px;background:rgba(255,255,255,.92);color:#111;font-size:10.5px;border-radius:4px;
+  padding:1px 5px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;border:1px solid rgba(0,0,0,.15)}
+.maptools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.maptools .note{margin:0}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:8px 0}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.pinrow{display:grid;grid-template-columns:34px 116px 1fr 1fr 92px 30px;gap:7px;align-items:start;
+  border:1px solid var(--line);border-radius:10px;padding:8px;margin:7px 0;font-size:13.5px}
+@media(max-width:760px){.pinrow{grid-template-columns:34px 1fr;}}
+.pinrow .n{width:26px;height:26px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px}
+.pinrow select,.pinrow input,.pinrow textarea{font-size:13px;padding:6px 8px}
+.pinrow textarea{min-height:38px}
+.pinrow .th{width:100%;height:52px;object-fit:cover;border-radius:6px;display:block;border:1px solid var(--line)}
+.pinrow .up{font-size:11.5px;width:100%;border:1px dashed var(--line);border-radius:6px;background:var(--lock);
+  color:var(--muted);padding:8px 4px;cursor:pointer;text-align:center}
+.pinrow .del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1}
+.other{opacity:.92}
+#sheet .mapwrap{display:grid;grid-template-columns:1.15fr 1fr;gap:6px;align-items:start}
+#sheet .m{position:relative;border:.7px solid #bbb;border-radius:3px;overflow:hidden}
+#sheet .m img{width:100%;display:block}
+#sheet .m .p{position:absolute;width:11px;height:11px;border-radius:50%;border:1.1px solid #fff;
+  transform:translate(-50%,-50%);color:#fff;font-size:6.4pt;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1}
+
+@media print{
+  @page{size:A4 portrait;margin:0}
+  body{background:#fff}
+  body>*{display:none!important}
+  #printroot{display:block!important;position:static}
+  #sheet{box-shadow:none;margin:0;width:210mm;min-height:0;padding:10mm}
+  .sheetbox{background:none;border:0;padding:0;overflow:visible}
+}
+#printroot{display:contents}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">지속가능하고 정의로운 도시</div>
+  <h1>Ⅳ. 성장의 그늘 — 도시가 만든 생태계 위기</h1>
+  <p class="sub">모둠 탐구 활동지 : 주제를 고르고 → 한 단계씩 좁혀 가고 → 답사로 확인하고 → A4 한 장으로 제출</p>
+  <div class="meta">
+    <div><label>학년 · 반</label><input type="text" data-key="cls"></div>
+    <div><label>모둠 이름</label><input type="text" data-key="team"></div>
+    <div><label>날짜</label><input type="text" data-key="date" placeholder="2026-00-00"></div>
+    <div><label>모둠원</label><input type="text" data-key="members"></div>
+  </div>
+</header>
+
+<div class="rail" id="rail"></div>
+<div class="progress"><i id="pbar"></i></div>
+
+<!-- 1 · 주제 선택 -->
+<section class="screen" id="w0">
+  <div class="stephead"><span class="stepno">1단계</span><span>주제 고르기</span><span class="time">5분</span></div>
+  <p class="guide">네 가지 생태계 위기를 탭으로 하나씩 열어 보고, 우리 동네에서 본 적이 있는지 표시하자.
+    <b>○ 자주 본다 / △ 가끔 본다 / × 잘 모르겠다.</b> 가장 할 말이 많은 주제 하나를 <b>모둠 주제로 정하기</b>를 눌러 확정한다.</p>
+  <div class="tabs" id="tabs"></div>
+  <div id="tpanels"></div>
+  <div class="warn" id="w0warn">주제를 하나 정해야 2단계로 넘어갈 수 있습니다.</div>
+</section>
+
+<!-- 2 · 유도 질문 사다리 -->
+<section class="screen" id="w1">
+  <div class="stephead"><span class="stepno">2단계</span><span>유도 질문 사다리</span><span class="time">15분</span></div>
+  <div class="carry"><b>▶ 이어받기 — 1단계에서</b> 고른 주제 : <span class="val empty" id="c1">아직 고르지 않음</span></div>
+  <p class="guide">①→②→③ 순서로만 올라간다. ②는 ①에 적은 장소를, ③은 ②에서 찾은 원인을 그대로 가져와 이어 쓴다. 각 칸마다 근거가 되는 사진과 짧은 설명을 남긴다.</p>
+  <div id="ladder"></div>
+  <div class="card">
+    <h3>사다리에서 나온 말 중 가장 인상 깊었던 한 문장</h3>
+    <input type="text" data-key="quote">
+  </div>
+  <div class="warn" id="w1warn">① 관찰 칸을 채워야 다음 단계로 넘어갈 수 있습니다.</div>
+</section>
+
+<!-- 3 · 주제 확정 -->
+<section class="screen" id="w2">
+  <div class="stephead"><span class="stepno">3단계</span><span>주제 확정하기</span><span class="time">5분</span></div>
+  <div class="carry"><b>▶ 이어받기 — 2단계에서</b> 사다리를 채운 주제 : <span class="val empty" id="c2">아직 고르지 않음</span></div>
+  <div class="tablewrap"><table>
+    <tr><td class="k">우리 모둠의 주제</td><td><b id="s3name">—</b></td></tr>
+    <tr><td class="k">고른 이유<br><span class="badge">2단계 답을 근거로</span></td><td><textarea data-key="s3why"></textarea></td></tr>
+    <tr><td class="k">끝까지 고민했지만<br>고르지 않은 주제와 그 이유</td><td><textarea data-key="s3drop"></textarea></td></tr>
+  </table></div>
+  <div class="photo" data-key="p_main" data-label="우리 주제를 한눈에 보여 주는 대표 사진"></div>
+  <div class="warn" id="w2warn">고른 이유를 적어야 다음 단계로 넘어갈 수 있습니다.</div>
+</section>
+
+<!-- 4 · 좁히기 -->
+<section class="screen" id="w3">
+  <div class="stephead"><span class="stepno">4단계</span><span>주제 좁히기 깔때기</span><span class="time">10분</span></div>
+  <div class="carry"><b>▶ 이어받기 — 3단계에서</b> 확정한 주제 : <span class="val empty" id="c3">아직 확정하지 않음</span></div>
+  <p class="guide">아래로 내려가며 한 칸씩 좁힌다. 각 칸은 바로 윗칸의 답 안에서만 골라야 한다.</p>
+  <div class="card"><h3>② 장소</h3><p class="look">①이 실제로 나타나는 우리 동네의 한 장소 (학교 급식실, ○○사거리, ○○천 하류 …)</p>
+    <input type="text" data-key="s4b"><div class="photo" data-key="p_s4b" data-label="② 그 장소의 사진"></div></div>
+  <div class="card"><h3>③ 대상 · 시간</h3><p class="look">②의 장소에서 세거나 볼 수 있는 것과 그 시점 (점심시간 잔반량, 등교 시간 차량 수 …)</p>
+    <input type="text" data-key="s4c"><div class="photo" data-key="p_s4c" data-label="③ 세거나 관찰할 대상의 사진"></div></div>
+  <div class="card"><h3>④ 누구의 문제</h3><p class="look">③이 실제로 그러하다면, 이득을 보는 사람과 부담을 지는 사람은?</p>
+    <input type="text" data-key="s4d"><div class="photo" data-key="p_s4d" data-label="④ 부담이 드러나는 장면의 사진"></div></div>
+  <div class="card" style="border-color:var(--accent)"><h3>⑤ 한 문장 탐구 질문 만들기</h3>
+    <p class="look">②·③·④의 답이 문장 틀에 자동으로 들어갑니다. 셋 중 하나를 고르세요.</p>
+    <div id="qopts"></div></div>
+  <div class="warn" id="w3warn">②·③을 채우고 ⑤에서 질문을 골라야 다음 단계로 넘어갈 수 있습니다.</div>
+</section>
+
+<!-- 5 · 점검 -->
+<section class="screen" id="w4">
+  <div class="stephead"><span class="stepno">5단계</span><span>탐구 질문 점검하기</span><span class="time">5분</span></div>
+  <div class="carry"><b>▶ 이어받기 — 4단계 ⑤에서</b> 만든 질문 : <span class="val empty" id="c4">아직 만들지 않음</span></div>
+  <p class="guide">다섯 가지를 읽고 <b>맞으면 체크</b>한다. 다섯 개가 모두 체크되어야 6단계로 넘어갈 수 있고, 빠진 것이 있으면 아래에서 질문을 고쳐 쓴다.</p>
+  <div class="tablewrap"><table id="checktable"><tr><th style="width:36px">번호</th><th>점검 항목</th><th style="width:78px">확인</th></tr></table></div>
+  <div style="margin-top:12px">
+    <label class="note">★ 고쳐 쓴 최종 탐구 질문 (6·7단계와 제출본에서 계속 사용)</label>
+    <textarea data-key="final" placeholder="점검을 통과한 질문을 그대로 옮겨 적거나, 고쳐 씁니다."></textarea>
+    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap;align-items:center">
+      <button class="act" id="copyq">⑤의 질문 그대로 가져오기</button>
+      <span id="checkstate" class="badge">점검 0 / 5</span>
+      <span class="note">교사 확인 :</span><input type="text" data-key="sign" style="width:130px">
+    </div>
+  </div>
+  <div class="warn" id="w4warn">★ 최종 탐구 질문을 적어야 6단계로 넘어갈 수 있습니다.</div>
+</section>
+
+<!-- 6 · 원인 -->
+<section class="screen" id="w5">
+  <div class="stephead"><span class="stepno">6단계</span><span>원인 – 도시적 특성 – 대응 방안</span><span class="time">10분</span></div>
+  <div class="carry"><b>▶ 이어받기 — 5단계에서</b> ★ 최종 탐구 질문 : <span class="val empty" id="c5">아직 확정하지 않음</span><br>
+    <span style="color:var(--muted)">아래 원인은 모두 이 질문에 대한 답이어야 한다.</span></div>
+  <p class="guide"><b>도시적 특성 예시</b> — 인구·시설의 밀집 / 생산지와 소비지의 분리 / 대량생산·대량소비 / 비용과 피해의 외부화 / 토지의 사유화와 개발 이익</p>
+  <div id="causes"></div>
+  <div class="warn" id="w5warn">원인 1을 적어야 답사 단계로 넘어갈 수 있습니다.</div>
+</section>
+
+<!-- 7 · 답사 -->
+<section class="screen" id="w6">
+  <div class="stephead"><span class="stepno">7단계</span><span>답사 — 계획하고, 나가서 확인하기</span><span class="time">답사 후 정리</span></div>
+  <div class="carry"><b>▶ 이어받기 — 6단계에서</b> 적은 원인 1·2·3을 어디에서 어떻게 확인할지 정하고, <b>답사 후 실제로 본 것</b>을 같은 줄에 이어 적는다.</div>
+  <div id="visits"></div>
+  <div class="card" style="border-color:var(--green)">
+    <h3>답사로 알게 된 것 — 처음 예상과 무엇이 달랐나?</h3>
+    <textarea data-key="reflect" placeholder="예상과 같았던 것, 달랐던 것, 답사에서 새로 생긴 질문을 3~4문장으로 적는다."></textarea>
+  </div>
+  <div class="card">
+    <h3>우리 모둠의 제안 — 이 문제에 대해 도시는 무엇을 해야 하는가?</h3>
+    <textarea data-key="propose" placeholder="6단계 대응 방안 가운데 답사 결과가 뒷받침해 준 것을 골라, 한두 문장으로 다듬어 적는다."></textarea>
+  </div>
+</section>
+
+<!-- 8 · 종합 정리 -->
+<section class="screen" id="w7">
+  <div class="stephead"><span class="stepno">제출</span><span>A4 한 장 종합 정리</span><span class="time">인쇄 제출</span></div>
+  <p class="guide">지금까지 쓴 내용이 아래 한 장에 자동으로 모입니다. <b>사진은 최대 8장</b>까지 골라 넣을 수 있고, 내용이 길면 자동으로 한 장에 맞춰 줄여 인쇄됩니다.</p>
+
+  <div class="card" style="border-color:var(--blue)">
+    <h3>🗺 커뮤니티 맵 — 우리 동네 지도에 표시하기</h3>
+    <p class="look">동네 지도(지도 앱 캡처·항공사진·손으로 그린 약도 모두 가능)를 올린 뒤, <b>지도를 클릭해 핀을 찍습니다.</b>
+      핀마다 유형·이름·메모·사진을 넣을 수 있고, 다른 모둠의 지도 데이터를 불러와 <b>학급 전체 지도</b>로 합칠 수 있습니다.</p>
+    <div class="mapdrop" id="mapdrop">지도 이미지를 고르거나 여기로 끌어다 놓기<br><span>예) 지도 앱 화면 캡처, 학교 주변 약도, 항공사진</span></div>
+    <input type="file" id="mapfile" accept="image/*" hidden>
+    <div class="mapstage" id="mapstage" style="display:none"><img id="mapimg" alt=""><div id="pinlayer"></div></div>
+    <div class="maptools" id="maptools" style="display:none">
+      <span class="note">지도를 클릭하면 그 자리에 핀이 생깁니다.</span>
+      <button class="act" id="mapchange">지도 바꾸기</button>
+      <button class="act" id="mapclear">핀 모두 지우기</button>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div id="pinlist"></div>
+    <div class="maptools">
+      <button class="act" id="expmap">📤 우리 모둠 지도 내보내기 (.json)</button>
+      <button class="act" id="impmap">📥 다른 모둠 지도 불러와 합치기</button>
+      <input type="file" id="impfile" accept=".json,application/json" hidden>
+      <span class="note">모둠끼리 파일을 주고받으면 학급 전체 커뮤니티 맵이 됩니다.</span>
+    </div>
+  </div>
+
+  <div class="maptools"><b style="font-size:14px">제출본에 넣을 것</b>
+    <label class="badge" style="cursor:pointer"><input type="checkbox" id="incmap"> 커뮤니티 맵</label>
+    <label class="badge" style="cursor:pointer"><input type="checkbox" id="incphoto"> 사진 기록</label></div>
+
+  <div><b style="font-size:14px">제출본에 넣을 사진 고르기</b> <span class="badge" id="pcount">0장 선택</span>
+    <div class="picker" id="picker"></div>
+    <p class="note" id="pnone" style="display:none">아직 올린 사진이 없습니다. 앞 단계로 돌아가 사진을 넣어 주세요.</p></div>
+  <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:12px 0 8px">
+    <b style="font-size:14px">미리보기</b>
+    <span class="badge" id="fitinfo">한 장 맞춤 100%</span>
+    <button class="act" id="zoomout">－</button><button class="act" id="zoomin">＋</button>
+  </div>
+  <div class="sheetbox" id="sheetbox"></div>
+</section>
+</div>
+
+<!-- 인쇄 대상 -->
+<div id="printroot"><div class="sheetbox" id="pbox"><div id="sheet"></div></div></div>
+
+<div class="bar">
+  <button class="act" id="prev">← 이전</button>
+  <button class="act primary" id="next">다음 →</button>
+  <button class="act" id="print">🖨 A4 한 장 인쇄</button>
+  <button class="act" id="save">💾 결과물 저장</button>
+  <button class="act" id="reset">↺ 처음부터</button>
+  <button class="act" id="freebtn" title="모든 단계를 잠금 없이 넘나들며 확인합니다">👁 검토 모드</button>
+  <button class="act" id="demo" style="display:none">예시 내용 채우기</button>
+  <div class="saveinfo" id="saveinfo">작성 중인 내용은 이 브라우저에 자동으로 임시 저장됩니다.</div>
+</div>
+
+<script>
+/* ============ 데이터 ============ */
+const TOPICS=[
+ {id:"가",name:"자원·에너지 소비",
+  look:"24시간 꺼지지 않는 조명, 냉난방, 데이터센터·상가의 전력 사용, 먼 곳에서 실어 오는 물·식량·전기",
+  q:["우리 학교와 동네에서 밤늦게까지 불이 꺼지지 않는 곳은 어디인가? 그 가운데 한 곳을 골라 적어 보자.",
+     "①에 적은 그곳이 에너지를 많이 쓰는 이유는 ‘건물의 구조’ 때문일까, ‘사람들의 생활 방식’ 때문일까, ‘도시의 밀도’ 때문일까? 하나를 고르고 근거를 대 보자.",
+     "②에서 고른 이유가 맞다면, 그 에너지를 쓰는 사람과 그 대가(발전소·송전탑·요금)를 치르는 사람은 같은 사람인가? 도시는 효율적인가, 비효율적인가?"]},
+ {id:"나",name:"대기·수질 오염",
+  look:"도로변 미세먼지, 열섬 현상, 복개된 하천, 비 온 뒤 흘러드는 도로 오염물",
+  q:["미세먼지가 심한 날 유독 숨이 답답했던 장소, 또는 비 온 뒤 물빛·냄새가 달라지는 곳은 어디였나? 한 곳을 골라 적어 보자.",
+     "①에 적은 그곳은 어떤 조건을 갖고 있는가? (큰 도로 / 공장·공사장 / 낮은 지대 / 바람길이 막힌 곳 …) 왜 하필 그런 곳에 오염이 모이는가?",
+     "②의 조건을 가진 동네에는 주로 누가 살고 있는가? 그 공기를 매일 마시는 사람은 누구인가? 이것을 ‘환경 정의’의 문제라 부를 수 있을까?"]},
+ {id:"다",name:"생물다양성 감소",
+  look:"사라진 참새·잠자리·개구리, 포장된 땅, 조각난 녹지, 늘어난 비둘기·까치",
+  q:["어릴 때보다 동네에서 보기 어려워진 동식물 하나를 골라 적고, 마지막으로 본 장소를 함께 적어 보자.",
+     "①에 적은 그 장소는 그동안 어떻게 바뀌었나? (하천 복개 / 재건축 / 주차장·포장 면적 증가 …) 변화를 시간 순서대로 적어 보자.",
+     "②의 변화는 무엇을 위해 이루어졌는가? 공원을 새로 ‘조성’하는 것과 남은 자연을 ‘보전’하는 것 중 무엇이 더 효과적일까? 도시의 녹지는 누구를 위해 만들어지는가?"]},
+ {id:"라",name:"폐기물",
+  look:"배달 용기, 포장재, 매일 나오는 급식 잔반, 도시 밖에 지어지는 소각장·매립지",
+  q:["우리 반에서 하루에 나오는 쓰레기 가운데 가장 많은 한 가지는 무엇인가? 그것이 버려지는 장소도 함께 적어 보자.",
+     "①에 적은 그 쓰레기는 왜 생기는가? 편리함·위생·포장·배달 중 무엇과 가장 관련이 깊은가? 그것은 개인의 선택인가, 도시의 구조인가?",
+     "②의 답을 놓고 볼 때, 그 쓰레기는 우리 눈앞에서 사라진 뒤 어디로 가는가? 쓰레기를 ‘보이지 않게’ 만드는 방식은 문제를 해결한 것인가, 옮긴 것인가?"]}
+];
+const LAD=["① 관찰","② 원인","③ 쟁점"];
+const CHECKS=["우리 동네의 구체적인 장소가 들어 있는가?","‘예/아니오’로 끝나지 않고 설명이 필요한 질문인가?",
+ "답사·관찰·자료 조사로 확인할 수 있는가?","도시의 특성(밀집·분업·대량생산과 소비·비용의 외부화)과 연결되는가?",
+ "한 번에 한 가지만 묻고 있는가?"];
+const STEPS=[["w0","1단계 주제"],["w1","2단계 사다리"],["w2","3단계 확정"],["w3","4단계 좁히기"],
+ ["w4","5단계 점검"],["w5","6단계 원인"],["w6","7단계 답사"],["w7","제출본 A4"]];
+
+/* ============ 상태 ============ */
+const KEY="eco-worksheet-v2";
+let S=(window.__SAVED__&&typeof window.__SAVED__==="object")?window.__SAVED__:{};
+if(!window.__SAVED__){try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r);}catch(e){}}
+const get=k=>S[k]||"";
+let tt=null;
+function save(){clearTimeout(tt);tt=setTimeout(()=>{try{localStorage.setItem(KEY,JSON.stringify(S));
+  document.getElementById("saveinfo").textContent="자동 임시 저장됨 · "+new Date().toLocaleTimeString("ko-KR");}catch(e){}},400);}
+let cur=Number(S.__step||0), tab=S.__tab||S.topic||"가", zoom=1;
+
+/* ============ 사진 ============ */
+const PHOTO_LABEL={};
+function initPhoto(el){
+  const k=el.dataset.key,label=el.dataset.label||"사진과 설명";
+  PHOTO_LABEL[k]=label;
+  el.innerHTML=`<div class="plabel">📷 ${label}</div><div class="row">
+    <div class="drop empty" tabindex="0">사진을 고르거나<br>여기로 끌어다 놓기</div>
+    <div class="side"><textarea data-key="${k}_desc" placeholder="무엇을·어디서·언제 찍었는가? 이 사진이 우리 주제와 어떻게 연결되는가? (2~3문장)"></textarea>
+    <button class="btn-x" style="display:none">사진 지우기</button></div></div>
+    <input type="file" accept="image/*" hidden>`;
+  const drop=el.querySelector(".drop"),file=el.querySelector("input[type=file]"),del=el.querySelector(".btn-x");
+  function paint(){const d=get(k);
+    if(d){drop.innerHTML=`<img src="${d}" alt="">`;drop.classList.remove("empty");del.style.display="block";}
+    else{drop.innerHTML="사진을 고르거나<br>여기로 끌어다 놓기";drop.classList.add("empty");del.style.display="none";}}
+  function load(f){if(!f||!f.type.startsWith("image/"))return;const r=new FileReader();
+    r.onload=e=>{const img=new Image();img.onload=()=>{const m=1100,sc=Math.min(1,m/Math.max(img.width,img.height));
+      const c=document.createElement("canvas");c.width=img.width*sc;c.height=img.height*sc;
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      S[k]=c.toDataURL("image/jpeg",.72);
+      if(!S.__pick)S.__pick=[];
+      if(S.__pick.length<8&&!S.__pick.includes(k))S.__pick.push(k);
+      save();paint();render();};img.src=e.target.result;};
+    r.readAsDataURL(f);}
+  drop.onclick=()=>file.click();
+  drop.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();file.click();}};
+  file.onchange=e=>load(e.target.files[0]);
+  drop.ondragover=e=>{e.preventDefault();drop.style.borderColor="var(--accent)";};
+  drop.ondragleave=()=>drop.style.borderColor="";
+  drop.ondrop=e=>{e.preventDefault();drop.style.borderColor="";load(e.dataTransfer.files[0]);};
+  del.onclick=()=>{delete S[k];if(S.__pick)S.__pick=S.__pick.filter(x=>x!==k);save();paint();render();};
+  paint();
+}
+const ph=(k,l)=>`<div class="photo" data-key="${k}" data-label="${l}"></div>`;
+
+/* ============ 화면 만들기 ============ */
+document.getElementById("rail").innerHTML=STEPS.map(([id,n],i)=>`<button data-go="${i}">${n}</button>`).join("");
+document.getElementById("tabs").innerHTML=TOPICS.map(t=>
+  `<button data-tab="${t.id}"><span class="t">${t.id}. ${t.name}</span><span class="s">눌러서 살펴보기</span></button>`).join("");
+document.getElementById("tpanels").innerHTML=TOPICS.map(t=>`
+ <div class="tpanel" data-panel="${t.id}" style="display:none">
+   <h3>${t.id}. ${t.name}</h3><p class="look">${t.look}</p>
+   <div class="marks"><span style="color:var(--muted)">우리 동네에서는?</span>
+     ${["○ 자주 본다","△ 가끔 본다","× 잘 모르겠다"].map(v=>`<label><input type="radio" name="m_${t.id}" value="${v[0]}">${v}</label>`).join("")}</div>
+   <div class="qpre"><b>이 주제를 고르면 2단계에서 이런 질문에 답하게 됩니다</b>
+     <ul>${t.q.map(q=>`<li>${q}</li>`).join("")}</ul></div>
+   ${ph("p_t"+t.id, t.name+" — 우리 동네에서 본 장면")}
+   <button class="act primary" data-choose="${t.id}" style="margin-top:6px">이 주제를 모둠 주제로 정하기</button>
+ </div>`).join("");
+document.getElementById("checktable").insertAdjacentHTML("beforeend",
+  CHECKS.map((c,i)=>`<tr><td class="k" style="width:36px;text-align:center">${i+1}</td><td>${c}</td>
+   <td style="text-align:center"><input type="checkbox" data-chk="${i}" style="width:19px;height:19px;accent-color:var(--green);cursor:pointer"></td></tr>`).join(""));
+document.getElementById("checktable").addEventListener("change",e=>{
+  const i=e.target.dataset.chk;if(i===undefined)return;
+  if(e.target.checked)S["chk"+i]="○";else delete S["chk"+i];
+  save();render();});
+document.getElementById("causes").innerHTML=[1,2,3].map(n=>`
+ <div class="card"><h3>원인 ${n}</h3><div class="tablewrap"><table>
+   <tr><td class="k">① 원인</td><td><textarea data-key="c${n}a"></textarea></td></tr>
+   <tr><td class="k">② 도시적 특성과의 관계</td><td><textarea data-key="c${n}b"></textarea></td></tr>
+   <tr><td class="k">③ 도시 차원의 대응 방안</td><td><textarea data-key="c${n}c"></textarea></td></tr>
+ </table></div>${ph("p_c"+n,"원인 "+n+"을 보여 주는 사진")}</div>`).join("");
+document.getElementById("visits").innerHTML=[1,2,3].map(n=>`
+ <div class="card"><h3>답사 포인트 ${n}</h3>
+  <div class="carry" style="margin-bottom:10px">▶ <b>6단계 원인 ${n}</b> : <span class="val empty" id="v${n}">비어 있음</span></div>
+  <div class="tablewrap"><table>
+   <tr><th colspan="2" style="background:var(--accent-soft)">답사 전 — 계획</th></tr>
+   <tr><td class="k">갈 장소</td><td><input type="text" data-key="v${n}a"></td></tr>
+   <tr><td class="k">확인할 것<br><span class="badge">무엇을 어떻게</span></td><td><textarea data-key="v${n}b"></textarea></td></tr>
+   <tr><td class="k">예상되는 모습</td><td><textarea data-key="v${n}c"></textarea></td></tr>
+   <tr><th colspan="2" style="background:var(--green-soft)">답사 후 — 실제로 본 것</th></tr>
+   <tr><td class="k">날짜 · 시간</td><td><input type="text" data-key="v${n}d" placeholder="예: 5월 12일 12:40~13:10"></td></tr>
+   <tr><td class="k">관찰 기록<br><span class="badge">수·양·크기 등 숫자로</span></td><td><textarea data-key="v${n}e" placeholder="예: 잔반통 3개 중 2개가 가득 참. 20분간 배달 오토바이 14대."></textarea></td></tr>
+   <tr><td class="k">예상과 비교</td><td><textarea data-key="v${n}f" placeholder="예상대로였는가, 달랐는가? 무엇이 달랐는가?"></textarea></td></tr>
+  </table></div>${ph("p_v"+n,"답사 포인트 "+n+" — 현장에서 찍은 사진")}</div>`).join("");
+
+/* ============ 입력 연결 ============ */
+function bind(){
+  document.querySelectorAll("input[data-key],textarea[data-key]").forEach(el=>{
+    if(el.__b)return;el.__b=1;
+    if(get(el.dataset.key))el.value=get(el.dataset.key);
+    el.addEventListener("input",()=>{S[el.dataset.key]=el.value;save();render();});
+  });
+  document.querySelectorAll("input[type=radio]").forEach(el=>{
+    if(el.__b)return;el.__b=1;
+    el.addEventListener("change",e=>{const n=e.target.name;
+      if(n==="qopt")S.qopt=e.target.value;else S[n]=e.target.value;save();render();});
+  });
+}
+function restore(){
+  TOPICS.forEach(t=>{const v=S["m_"+t.id];if(v){const e=document.querySelector(`input[name=m_${t.id}][value="${v}"]`);if(e)e.checked=true;}});
+  CHECKS.forEach((_,i)=>{if(S["chk"+i]){const e=document.querySelector(`input[data-chk="${i}"]`);if(e)e.checked=true;}});
+}
+document.getElementById("tabs").onclick=e=>{const b=e.target.closest("[data-tab]");if(!b)return;tab=b.dataset.tab;S.__tab=tab;save();render();};
+document.getElementById("tpanels").onclick=e=>{const b=e.target.closest("[data-choose]");if(!b)return;
+  const id=b.dataset.choose;
+  if(S.topic&&S.topic!==id&&!confirm("주제를 바꾸면 2단계 사다리에 쓴 답은 새 주제의 질문으로 바뀝니다. 계속할까요?"))return;
+  S.topic=id;save();buildLadder();render();go(1);};
+document.getElementById("rail").onclick=e=>{const b=e.target.closest("[data-go]");if(b&&!b.disabled)go(Number(b.dataset.go));};
+
+/* 사다리(주제별) */
+function buildLadder(){
+  const t=TOPICS.find(x=>x.id===S.topic);const box=document.getElementById("ladder");
+  if(!t){box.innerHTML="";return;}
+  if(box.dataset.t===t.id)return;
+  box.dataset.t=t.id;
+  box.innerHTML=`<div class="card"><h3>${t.id}. ${t.name}</h3>`+
+   LAD.map((s,i)=>`<div style="margin:14px 0"><div style="font-weight:700">${s}</div>
+     <p class="look" style="margin:2px 0 6px">${t.q[i]}</p>
+     <textarea data-key="l_${t.id}_${i}"></textarea>${ph("p_l"+t.id+i,t.id+"-"+s+" 근거 사진")}</div>`).join("")+`</div>`;
+  box.querySelectorAll(".photo").forEach(initPhoto);bind();
+}
+
+/* ============ 파생값 ============ */
+const tname=()=>{const t=TOPICS.find(x=>x.id===S.topic);return t?`${t.id}. ${t.name}`:"";};
+const tshort=()=>{const t=TOPICS.find(x=>x.id===S.topic);return t?t.name:"";};
+function questions(){
+  const B=get("s4b")||"[②의 장소]",C=get("s4c")||"[③의 대상]",D=get("s4d")||"[④의 사람]";
+  return [`왜 ${B}에서는 ${C}이(가) 이런 모습으로 나타날까?`,
+          `${B}의 ${C}은(는) 도시의 어떤 특성 때문에 생겼을까?`,
+          `${C} 문제의 부담은 왜 ${D}에게 더 많이 돌아갈까?`];
+}
+const q5=()=>(S.qopt!=null&&get("s4b")&&get("s4c"))?questions()[S.qopt]:"";
+const done=i=>[
+  !!S.topic, !!get("l_"+S.topic+"_0"), !!get("s3why"), !!q5(),
+  !!get("final").trim(), !!get("c1a"), !!(get("v1a")||get("v1e")), false ][i];
+function setVal(id,txt,ph2){const e=document.getElementById(id);if(!e)return;
+  e.textContent=txt||ph2||"아직 비어 있음";e.classList.toggle("empty",!txt);}
+
+/* ============ 렌더 ============ */
+function render(){
+  // 탭
+  document.querySelectorAll("[data-tab]").forEach(b=>{
+    b.classList.toggle("cur",b.dataset.tab===tab);
+    b.classList.toggle("chosen",b.dataset.tab===S.topic);
+    b.querySelector(".s").textContent = b.dataset.tab===S.topic?"✔ 우리 모둠 주제":"눌러서 살펴보기";});
+  document.querySelectorAll("[data-panel]").forEach(p=>p.style.display=p.dataset.panel===tab?"":"none");
+  document.querySelectorAll("[data-choose]").forEach(b=>{
+    const on=b.dataset.choose===S.topic;b.textContent=on?"✔ 모둠 주제로 정해졌습니다":"이 주제를 모둠 주제로 정하기";
+    b.classList.toggle("primary",!on);});
+  // 이어받기
+  ["c1","c2","c3"].forEach(id=>setVal(id,tname(),"아직 고르지 않음"));
+  document.getElementById("s3name").textContent=tname()||"—";
+  // ⑤ 질문
+  const qs=questions(),box=document.getElementById("qopts");
+  if(box.dataset.n!=="3"){box.innerHTML=qs.map((q,i)=>`<label class="qpick"><input type="radio" name="qopt" value="${i}"><span data-q="${i}"></span></label>`).join("");
+    box.dataset.n="3";bind();if(S.qopt!=null){const e=document.querySelector(`input[name=qopt][value="${S.qopt}"]`);if(e)e.checked=true;}}
+  qs.forEach((q,i)=>{const s=box.querySelector(`[data-q="${i}"]`);if(s)s.textContent=q;});
+  box.querySelectorAll(".qpick").forEach((l,i)=>l.classList.toggle("sel",String(S.qopt)===String(i)));
+  if(S.qopt!=null){const qe=box.querySelector(`input[name=qopt][value="${S.qopt}"]`);if(qe)qe.checked=true;}
+  setVal("c4",q5(),"아직 만들지 않음");
+  setVal("c5",get("final"),"아직 확정하지 않음");
+  [1,2,3].forEach(n=>setVal("v"+n,get("c"+n+"a"),"비어 있음"));
+  const ok=CHECKS.filter((_,i)=>S["chk"+i]==="○").length,cs=document.getElementById("checkstate");
+  cs.textContent=`체크 ${ok} / 5`;cs.style.color=ok===5?"var(--green)":"var(--muted)";
+  cs.style.borderColor=ok===5?"var(--green)":"var(--line)";
+  // 레일
+  document.querySelectorAll("[data-go]").forEach((b,i)=>{
+    b.classList.toggle("cur",i===cur);b.classList.toggle("done",i!==cur&&done(i));
+    b.disabled = !S.__free && i>0 && !S.topic;});
+  const fb=document.getElementById("freebtn");
+  fb.textContent=S.__free?"👁 검토 모드 켜짐 — 끄기":"👁 검토 모드";
+  fb.classList.toggle("primary",!!S.__free);
+  document.getElementById("demo").style.display=S.__free?"":"none";
+  document.getElementById("next").disabled = cur===STEPS.length-1;
+  document.getElementById("pbar").style.width=((cur+1)/STEPS.length*100)+"%";
+  document.getElementById("next").textContent=cur===STEPS.length-1?"제출본 확인 완료":"다음 →";
+  document.getElementById("prev").disabled=cur===0;
+  document.getElementById("next").disabled=cur===STEPS.length-1;
+  if(cur===STEPS.length-1){
+    if(S.__incmap===undefined)S.__incmap=1;
+    if(S.__incphoto===undefined)S.__incphoto=1;
+    document.getElementById("incmap").checked=!!S.__incmap;
+    document.getElementById("incphoto").checked=!!S.__incphoto;
+    renderMap();renderPicker();renderSheet();}
+}
+function go(i){
+  if(i>cur && !S.__free){const need=[null,"w0warn","w1warn","w2warn","w3warn","w4warn","w5warn",null];
+    const gate=[()=>true,()=>!!S.topic,()=>!!get("l_"+S.topic+"_0"),()=>!!get("s3why"),()=>!!q5(),
+      ()=>!!get("final").trim(),()=>!!get("c1a"),()=>true];
+    for(let s=cur;s<i;s++){ if(!gate[s+1]()){ const w=document.getElementById(need[s+1]);
+      if(w){w.classList.add("on");setTimeout(()=>w.classList.remove("on"),4000);w.scrollIntoView({block:"center",behavior:"smooth"});}
+      i=s; break; } }
+  }
+  cur=Math.max(0,Math.min(STEPS.length-1,i));S.__step=cur;save();
+  STEPS.forEach(([id],n)=>document.getElementById(id).classList.toggle("on",n===cur));
+  window.scrollTo({top:0,behavior:"smooth"});render();
+}
+document.getElementById("freebtn").onclick=()=>{
+  S.__free=S.__free?0:1;save();
+  if(S.__free&&!S.topic){S.topic="라";buildLadder();}
+  render();
+  if(S.__free)alert("검토 모드입니다. 위쪽 단계 이름을 눌러 1~7단계와 제출본(A4)을 자유롭게 오갈 수 있습니다.\n'예시 내용 채우기'를 누르면 빈 칸에 예시가 들어가 제출본 모양을 바로 확인할 수 있습니다.");
+};
+const DEMO={cls:"2학년 4반",team:"3모둠",date:"2026-05-12",members:"김○○ 이○○ 박○○ 최○○",
+ s3why:"급식실에서 매일 눈으로 보는 문제여서 답사로 바로 확인할 수 있다고 판단했다.",
+ s3drop:"대기·수질 오염도 후보였지만 측정 장비가 없어 확인이 어려웠다.",
+ s4b:"학교 급식실",s4c:"점심시간 잔반통의 양",s4d:"급식 조리 노동자와 소각장 인근 주민",
+ final:"왜 학교 급식실에서는 점심시간 잔반이 이렇게 많이 나올까?",sign:"",
+ c1a:"배식량이 학생별 식사량과 무관하게 일괄로 정해진다",c1b:"대량생산·대량소비 — 한꺼번에 조리하고 한꺼번에 버린다",c1c:"사전 신청제·소·중·대 배식 선택제 도입",
+ c2a:"남은 음식이 어디로 가는지 학생들이 알지 못한다",c2b:"비용과 피해의 외부화 — 처리 시설이 도시 밖에 있다",c2c:"잔반 처리 과정과 비용을 학교 게시판에 공개",
+ c3a:"잔반을 줄일 유인이 없다",c3b:"생산지와 소비지의 분리 — 식재료의 이동 거리가 보이지 않는다",c3c:"학급별 잔반량 게시와 감축 목표 운영",
+ v1a:"본관 1층 급식실 잔반대",v1b:"20분 동안 잔반통이 차는 속도와 남는 반찬 종류",v1c:"국과 나물류가 가장 많이 남을 것",
+ v1d:"5월 12일 12:40~13:00",v1e:"20분간 잔반통 3개 중 2개가 가득 참. 나물류가 절반 이상.",v1f:"예상대로 나물류가 많았지만, 국은 예상보다 적었다.",
+ v2a:"후문 앞 분리수거장",v2b:"배달 용기·포장재의 종류와 개수",v2c:"플라스틱 용기가 가장 많을 것",
+ v2d:"5월 12일 16:10",v2e:"플라스틱 용기 38개, 종이컵 21개 확인.",v2f:"종이컵이 예상보다 훨씬 많았다.",
+ v3a:"학교 뒤 골목 상가",v3b:"배달 오토바이 통행 수와 쓰레기 배출 시각",v3c:"저녁 시간대에 몰릴 것",
+ v3d:"5월 12일 17:30~17:50",v3e:"20분간 배달 오토바이 14대, 종량제 봉투 9개 적재.",v3f:"예상보다 이른 시간부터 쓰레기가 쌓였다.",
+ reflect:"눈앞에서 사라지는 쓰레기가 실제로는 학교 밖 어딘가에 계속 쌓인다는 것을 확인했다. 처음에는 개인의 습관 문제라고 생각했지만, 배식 방식과 배달 구조가 더 큰 원인이라는 쪽으로 생각이 바뀌었다.",
+ propose:"배식량을 학생이 고르게 하고 학급별 잔반량을 공개해, 줄인 만큼이 눈에 보이도록 해야 한다.",
+ quote:"“쓰레기는 사라진 게 아니라 옮겨진 것이다.”"};
+document.getElementById("demo").onclick=()=>{
+  if(!confirm("빈 칸에 예시 내용을 채웁니다. 이미 쓴 내용은 그대로 둡니다. 계속할까요?"))return;
+  if(!S.topic){S.topic="라";buildLadder();}
+  Object.entries(DEMO).forEach(([k,v])=>{if(!get(k))S[k]=v;});
+  const L=["학교 급식실과 후문 앞 분리수거장에 쓰레기가 가장 많이 모인다.",
+    "배달·포장 문화와 일괄 배식 방식 때문이며, 개인의 선택보다 도시의 구조와 관련이 깊다.",
+    "우리 눈앞에서 사라진 쓰레기는 도시 밖 소각장·매립지로 옮겨질 뿐, 문제는 해결되지 않았다."];
+  L.forEach((v,i)=>{const k="l_"+S.topic+"_"+i;if(!get(k))S[k]=v;});
+  [0,1,2,3,4].forEach(i=>{if(!S["chk"+i])S["chk"+i]="○";});
+  if(S.qopt==null)S.qopt="0";
+  save();
+  document.querySelectorAll("input[data-key],textarea[data-key]").forEach(el=>{if(get(el.dataset.key))el.value=get(el.dataset.key);});
+  restore();render();
+};
+document.getElementById("prev").onclick=()=>go(cur-1);
+document.getElementById("next").onclick=()=>go(cur+1);
+document.getElementById("copyq").onclick=()=>{const q=q5();if(!q){alert("4단계 ⑤에서 질문을 먼저 고르세요.");return;}
+  S.final=q;document.querySelector("[data-key=final]").value=q;save();render();};
+
+/* ============ 사진 고르기 ============ */
+function allPhotos(){return Object.keys(S).filter(k=>k.startsWith("p_")&&!k.endsWith("_desc")&&String(S[k]).startsWith("data:"));}
+function renderPicker(){
+  const list=allPhotos(),box=document.getElementById("picker");
+  if(!S.__pick)S.__pick=list.slice(0,8);
+  S.__pick=S.__pick.filter(k=>list.includes(k));
+  document.getElementById("pnone").style.display=list.length?"none":"block";
+  box.innerHTML=list.map(k=>{const on=S.__pick.includes(k);
+    return `<label class="${on?"on":""}" data-pk="${k}"><img src="${S[k]}" alt="">
+     <span class="c"><input type="checkbox" ${on?"checked":""}> ${(PHOTO_LABEL[k]||k).slice(0,22)}</span></label>`;}).join("");
+  document.getElementById("pcount").textContent=S.__pick.length+"장 선택 (최대 8)";
+}
+document.getElementById("picker").onclick=e=>{
+  const l=e.target.closest("[data-pk]");if(!l)return;
+  const k=l.dataset.pk;
+  if(S.__pick.includes(k))S.__pick=S.__pick.filter(x=>x!==k);
+  else{if(S.__pick.length>=8){alert("사진은 최대 8장까지 넣을 수 있습니다.");e.preventDefault();return;}S.__pick.push(k);}
+  save();renderPicker();renderSheet();
+};
+
+/* ============ 커뮤니티 맵 ============ */
+const CAT=[{id:"가",n:"자원·에너지",c:"#c2410c"},{id:"나",n:"대기·수질",c:"#1d4ed8"},
+           {id:"다",n:"생물다양성",c:"#15803d"},{id:"라",n:"폐기물",c:"#7c3aed"},
+           {id:"기타",n:"기타·좋은 사례",c:"#0f766e"}];
+const catColor=id=>(CAT.find(c=>c.id===id)||CAT[4]).c;
+function shrink(f,max,q,cb){ if(!f||!f.type.startsWith("image/"))return;
+  const r=new FileReader();
+  r.onload=e=>{const img=new Image();img.onload=()=>{const sc=Math.min(1,max/Math.max(img.width,img.height));
+    const c=document.createElement("canvas");c.width=img.width*sc;c.height=img.height*sc;
+    c.getContext("2d").drawImage(img,0,0,c.width,c.height);cb(c.toDataURL("image/jpeg",q));};img.src=e.target.result;};
+  r.readAsDataURL(f);}
+const pins=()=>(S.pins||(S.pins=[]));
+const mine=p=>!p.team||p.team===(get("team")||"우리 모둠");
+
+const mapdrop=document.getElementById("mapdrop"),mapfile=document.getElementById("mapfile"),
+      mapstage=document.getElementById("mapstage"),mapimg=document.getElementById("mapimg");
+mapdrop.onclick=()=>mapfile.click();
+mapdrop.ondragover=e=>{e.preventDefault();mapdrop.style.borderColor="var(--accent)";};
+mapdrop.ondragleave=()=>mapdrop.style.borderColor="";
+mapdrop.ondrop=e=>{e.preventDefault();mapdrop.style.borderColor="";shrink(e.dataTransfer.files[0],1500,.78,d=>{S.mapbase=d;save();renderMap();renderSheet();});};
+mapfile.onchange=e=>shrink(e.target.files[0],1500,.78,d=>{S.mapbase=d;save();renderMap();renderSheet();});
+document.getElementById("mapchange").onclick=()=>mapfile.click();
+document.getElementById("mapclear").onclick=()=>{if(!confirm("이 지도의 핀을 모두 지울까요?"))return;S.pins=[];save();renderMap();renderSheet();};
+mapstage.onclick=e=>{
+  if(e.target.closest(".pin"))return;
+  const r=mapimg.getBoundingClientRect();
+  const x=+(((e.clientX-r.left)/r.width)*100).toFixed(2), y=+(((e.clientY-r.top)/r.height)*100).toFixed(2);
+  if(x<0||x>100||y<0||y>100)return;
+  pins().push({id:"p"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+    x,y,cat:S.topic||"기타",t:"",n:"",team:get("team")||"우리 모둠"});
+  save();renderMap(true);renderSheet();
+  const last=document.querySelector("#pinlist .pinrow:last-child input[data-pf=t]");if(last)last.focus();
+};
+function renderMap(force){
+  const has=!!S.mapbase;
+  mapdrop.style.display=has?"none":"";
+  mapstage.style.display=has?"":"none";
+  document.getElementById("maptools").style.display=has?"":"none";
+  if(has&&mapimg.src!==S.mapbase)mapimg.src=S.mapbase;
+  // 핀
+  document.getElementById("pinlayer").innerHTML=pins().map((p,i)=>
+    `<div class="pin" style="left:${p.x}%;top:${p.y}%"><div class="dot" style="background:${catColor(p.cat)}"><b>${i+1}</b></div>
+     ${p.t?`<div class="lb">${esc(p.t)}</div>`:""}</div>`).join("");
+  // 범례
+  const teams=[...new Set(pins().map(p=>p.team).filter(Boolean))];
+  document.getElementById("legend").innerHTML = pins().length?
+    CAT.map(c=>{const n=pins().filter(p=>p.cat===c.id).length;
+      return n?`<span><i style="background:${c.c}"></i>${c.n} ${n}</span>`:"";}).join("")
+      +(teams.length>1?`<span>· 참여 모둠 ${teams.length}개 : ${esc(teams.join(", "))}</span>`:"") : "";
+  // 목록
+  const sig=pins().map(p=>p.id).join("|");
+  const box=document.getElementById("pinlist");
+  if(force||box.dataset.sig!==sig){
+    box.dataset.sig=sig;
+    box.innerHTML=pins().length?pins().map((p,i)=>`
+      <div class="pinrow" data-pid="${p.id}" ${mine(p)?"":'class="pinrow other"'}>
+        <div class="n" style="background:${catColor(p.cat)}">${i+1}</div>
+        <select data-pf="cat">${CAT.map(c=>`<option value="${c.id}" ${p.cat===c.id?"selected":""}>${c.id==="기타"?"기타·좋은 사례":c.id+". "+c.n}</option>`).join("")}</select>
+        <input type="text" data-pf="t" placeholder="장소 이름 (예: ○○사거리 버스정류장)" value="${esc(p.t)}">
+        <textarea data-pf="n" placeholder="무엇을 보았나 / 왜 표시했나">${esc(p.n)}</textarea>
+        <div>${p.ph?`<img class="th" src="${p.ph}" alt="">`:`<div class="up" data-pf="up">사진 넣기</div>`}
+          <input type="file" accept="image/*" data-pf="file" hidden></div>
+        <button class="del" data-pf="del" title="삭제">✕</button>
+      </div>`).join("")
+      :`<p class="note">아직 찍은 핀이 없습니다. 지도를 클릭해 답사에서 확인한 지점을 표시해 보세요.</p>`;
+  }
+}
+document.getElementById("pinlist").addEventListener("input",e=>{
+  const row=e.target.closest("[data-pid]");if(!row)return;
+  const p=pins().find(x=>x.id===row.dataset.pid);if(!p)return;
+  const f=e.target.dataset.pf;
+  if(f==="t"){p.t=e.target.value;}else if(f==="n"){p.n=e.target.value;}
+  save();
+  document.getElementById("pinlayer").innerHTML=pins().map((q,i)=>
+    `<div class="pin" style="left:${q.x}%;top:${q.y}%"><div class="dot" style="background:${catColor(q.cat)}"><b>${i+1}</b></div>
+     ${q.t?`<div class="lb">${esc(q.t)}</div>`:""}</div>`).join("");
+  renderSheet();
+});
+document.getElementById("pinlist").addEventListener("change",e=>{
+  const row=e.target.closest("[data-pid]");if(!row)return;
+  const p=pins().find(x=>x.id===row.dataset.pid);if(!p)return;
+  if(e.target.dataset.pf==="cat"){p.cat=e.target.value;save();renderMap(true);renderSheet();}
+  if(e.target.dataset.pf==="file"){shrink(e.target.files[0],700,.7,d=>{p.ph=d;save();renderMap(true);renderSheet();});}
+});
+document.getElementById("pinlist").addEventListener("click",e=>{
+  const row=e.target.closest("[data-pid]");if(!row)return;
+  const p=pins().find(x=>x.id===row.dataset.pid);if(!p)return;
+  const f=e.target.dataset.pf;
+  if(f==="up")row.querySelector("[data-pf=file]").click();
+  if(f==="del"){if(!confirm("이 핀을 지울까요?"))return;S.pins=pins().filter(x=>x.id!==p.id);save();renderMap(true);renderSheet();}
+});
+document.getElementById("expmap").onclick=()=>{
+  const data={kind:"community-map",team:get("team")||"모둠",cls:get("cls"),topic:S.topic||"",
+    mapbase:S.mapbase||"",pins:pins().filter(mine)};
+  const blob=new Blob([JSON.stringify(data)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=`커뮤니티맵_${(get("team")||"모둠").replace(/[\\/:*?"<>|]/g,"")}.json`;
+  document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000);};
+document.getElementById("impmap").onclick=()=>document.getElementById("impfile").click();
+document.getElementById("impfile").onchange=e=>{
+  const f=e.target.files[0];if(!f)return;const r=new FileReader();
+  r.onload=ev=>{try{
+    const d=JSON.parse(ev.target.result);
+    if(!d||!Array.isArray(d.pins))throw 0;
+    if(!S.mapbase&&d.mapbase)S.mapbase=d.mapbase;
+    const have=new Set(pins().map(p=>p.id));let add=0;
+    d.pins.forEach(p=>{if(p&&p.id&&!have.has(p.id)){pins().push({...p,team:p.team||d.team||"다른 모둠"});add++;}});
+    save();renderMap(true);renderSheet();
+    alert(`${d.team||"다른 모둠"}의 핀 ${add}개를 합쳤습니다. (전체 ${pins().length}개)`);
+  }catch(err){alert("지도 파일을 읽을 수 없습니다. 내보내기로 만든 .json 파일인지 확인해 주세요.");}};
+  r.readAsText(f);e.target.value="";};
+["incmap","incphoto"].forEach(id=>{const el=document.getElementById(id);
+  el.addEventListener("change",()=>{S["__"+id]=el.checked?1:0;save();renderSheet();});});
+
+/* ============ A4 제출본 ============ */
+const esc=s=>String(s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const cell=v=>v?esc(v):'<span class="empty">—</span>';
+function renderSheet(){
+  const t=TOPICS.find(x=>x.id===S.topic);
+  const lad=[0,1,2].map(i=>get("l_"+S.topic+"_"+i));
+  const rows=[1,2,3];
+  const html=`
+  <div class="s-head">
+    <div><div class="k">Ⅳ 성장의 그늘 — 도시가 만든 생태계 위기 / 모둠 탐구 보고</div>
+      <h2>${t?esc(t.id+". "+t.name):'<span class="empty">주제 미정</span>'}</h2></div>
+    <div class="s-meta">${cell(get("cls"))} · ${cell(get("team"))} · ${cell(get("date"))}<br>모둠원 ${cell(get("members"))}</div>
+  </div>
+  <div class="q"><span>탐구 질문</span>${cell(get("final")||q5())}</div>
+  <div class="cols">
+    <div>
+      <h4>§ · 주제를 좁혀 온 과정</h4>
+      <table>
+        <tr><td class="k">① 관찰</td><td>${cell(lad[0])}</td></tr>
+        <tr><td class="k">② 원인</td><td>${cell(lad[1])}</td></tr>
+        <tr><td class="k">③ 쟁점</td><td>${cell(lad[2])}</td></tr>
+        <tr><td class="k">장소</td><td>${cell(get("s4b"))}</td></tr>
+        <tr><td class="k">대상·시간</td><td>${cell(get("s4c"))}</td></tr>
+        <tr><td class="k">누구의 문제</td><td>${cell(get("s4d"))}</td></tr>
+        <tr><td class="k">고른 이유</td><td>${cell(get("s3why"))}</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4>§ · 원인 – 도시적 특성 – 대응 방안</h4>
+      <table>
+        <tr><th style="width:14px">#</th><th>원인</th><th>도시적 특성</th><th>대응 방안</th></tr>
+        ${rows.map(n=>`<tr><td class="k" style="width:14px;text-align:center">${n}</td>
+          <td>${cell(get("c"+n+"a"))}</td><td>${cell(get("c"+n+"b"))}</td><td>${cell(get("c"+n+"c"))}</td></tr>`).join("")}
+      </table>
+    </div>
+  </div>
+  <h4>§ · 답사 결과 — 나가서 확인한 것</h4>
+  <table>
+    <tr><th style="width:15%">장소</th><th style="width:13%">날짜·시간</th><th style="width:22%">확인할 것</th>
+        <th style="width:25%">관찰 기록</th><th>예상과 비교</th></tr>
+    ${rows.map(n=>`<tr><td>${cell(get("v"+n+"a"))}</td><td>${cell(get("v"+n+"d"))}</td>
+      <td>${cell(get("v"+n+"b"))}</td><td>${cell(get("v"+n+"e"))}</td><td>${cell(get("v"+n+"f"))}</td></tr>`).join("")}
+  </table>
+  ${(S.__incmap&&S.mapbase&&pins().length)?`<h4>§ · 커뮤니티 맵 — 우리 동네에서 확인한 지점</h4>
+    <div class="mapwrap">
+      <div class="m"><img src="${S.mapbase}" alt="">
+        ${pins().map((p,i)=>`<div class="p" style="left:${p.x}%;top:${p.y}%;background:${catColor(p.cat)}">${i+1}</div>`).join("")}</div>
+      <table><tr><th style="width:13px">#</th><th style="width:52px">유형</th><th>장소 · 확인한 것</th></tr>
+        ${pins().map((p,i)=>`<tr><td class="k" style="width:13px;text-align:center;background:${catColor(p.cat)}!important;color:#fff!important">${i+1}</td>
+          <td>${esc((CAT.find(c=>c.id===p.cat)||CAT[4]).n)}</td>
+          <td><b>${cell(p.t)}</b>${p.n?" — "+esc(p.n):""}${p.team&&p.team!==(get("team")||"우리 모둠")?` <i>(${esc(p.team)})</i>`:""}</td></tr>`).join("")}
+      </table>
+    </div>`:""}
+  ${(S.__incphoto&&S.__pick&&S.__pick.length)?`<h4>§ · 사진 기록</h4><div class="pgrid">${S.__pick.map(k=>
+    `<div class="pg"><img src="${S[k]}" alt=""><div class="cap">${esc((get(k+"_desc")||PHOTO_LABEL[k]||"").slice(0,70))}</div></div>`).join("")}</div>`:""}
+  <div class="cols" style="margin-top:7px">
+    <div><h4>§ · 답사로 알게 된 것</h4><table><tr><td>${cell(get("reflect"))}</td></tr></table></div>
+    <div><h4>§ · 우리 모둠의 제안</h4><table><tr><td>${cell(get("propose"))}</td></tr></table></div>
+  </div>
+  <div class="pact">우리 모둠은 <b>${cell(tshort())}</b> 문제를 <b>${cell(get("s4b"))}</b>에서 살펴보았다.
+    우리가 확인하고 싶었던 것은 <b>${cell(get("final")||q5())}</b> 이다.</div>
+  <div class="sign">교사 확인 ${cell(get("sign"))} &nbsp;/&nbsp; 제출일 ${cell(get("date"))}</div>`;
+  let sn=0;
+  document.getElementById("sheet").innerHTML=html.replace(/<h4>§/g,()=>"<h4>"+(++sn));
+  fit();
+  const box=document.getElementById("sheetbox");
+  if(!box.firstChild)box.appendChild(document.getElementById("pbox"));
+}
+function fit(){
+  const sh=document.getElementById("sheet");
+  sh.style.transform="none";sh.style.minHeight="0";
+  const maxH=297*3.7795-2, h=sh.scrollHeight;
+  let z=Math.min(1,(maxH)/h);
+  z=Math.max(.55,z);
+  window.__fit=z;
+  sh.style.minHeight = (297/z)+"mm";
+  applyZoom();
+  document.getElementById("fitinfo").textContent="한 장 맞춤 "+Math.round(z*100)+"%"+(z<1?" (자동 축소)":"");
+}
+function applyZoom(){
+  const sh=document.getElementById("sheet");
+  const z=(window.__fit||1)*zoom;
+  sh.style.zoom=z;
+}
+document.getElementById("zoomin").onclick=()=>{zoom=Math.min(1.6,zoom+.1);applyZoom();};
+document.getElementById("zoomout").onclick=()=>{zoom=Math.max(.4,zoom-.1);applyZoom();};
+
+/* ============ 인쇄 · 저장 ============ */
+document.getElementById("print").onclick=()=>{
+  const box=document.getElementById("sheetbox");
+  renderPicker();renderSheet();
+  const z=zoom;zoom=1;applyZoom();
+  // 인쇄 시에는 pbox를 문서 끝의 printroot로 옮긴다
+  document.getElementById("printroot").appendChild(document.getElementById("pbox"));
+  setTimeout(()=>{window.print();
+    setTimeout(()=>{box.appendChild(document.getElementById("pbox"));zoom=z;applyZoom();},300);},60);
+};
+document.getElementById("reset").onclick=()=>{
+  if(!confirm("작성한 내용과 사진이 모두 지워집니다. 계속할까요?"))return;
+  try{localStorage.removeItem(KEY);}catch(e){}S={};location.reload();};
+document.getElementById("save").onclick=()=>{
+  const clone=document.documentElement.cloneNode(true);
+  clone.querySelectorAll("script[data-saved]").forEach(n=>n.remove());
+  clone.querySelectorAll(".photo").forEach(n=>n.innerHTML="");
+  const mi=clone.querySelector("#mapimg");if(mi)mi.removeAttribute("src");
+  ["tabs","tpanels","causes","visits","qopts","rail","picker","sheet","ladder","pinlayer","pinlist","legend"].forEach(id=>{
+    const n=clone.querySelector("#"+id);if(n){n.innerHTML="";n.removeAttribute("data-n");n.removeAttribute("data-t");n.removeAttribute("data-sig");}});
+  const ct=clone.querySelector("#checktable");
+  if(ct)Array.from(ct.querySelectorAll("tr")).slice(1).forEach(r=>r.remove());
+  const s=document.createElement("script");s.setAttribute("data-saved","1");
+  s.textContent="window.__SAVED__="+JSON.stringify(S).replace(/</g,"\\u003c")+";";
+  clone.querySelector("head").appendChild(s);
+  const blob=new Blob(["<!DOCTYPE html>\n"+clone.outerHTML],{type:"text/html"});
+  const team=(get("team")||"모둠").replace(/[\\/:*?"<>|]/g,"");
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=`성장의그늘_탐구보고_${team}.html`;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),3000);
+  document.getElementById("saveinfo").textContent="결과물 파일을 내려받았습니다. 그 파일을 열면 사진과 글이 그대로 이어집니다.";
+};
+
+/* ============ 시작 ============ */
+document.querySelectorAll(".photo").forEach(initPhoto);
+bind();restore();buildLadder();
+STEPS.forEach(([id],n)=>document.getElementById(id).classList.toggle("on",n===cur));
+render();
+window.addEventListener("resize",()=>{if(cur===STEPS.length-1)fit();});
+</script>
+</body>
+</html>
